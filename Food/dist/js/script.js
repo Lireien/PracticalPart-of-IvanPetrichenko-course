@@ -145,7 +145,7 @@ window.addEventListener('DOMContentLoaded', function () {
       this.price = price;
       this.classes = classes;
       this.parent = document.querySelector(parentSelector);
-      this.transfer = 27;
+      this.transfer = 2.56;
       this.changeCurrency();
     }
     changeCurrency() {
@@ -155,7 +155,7 @@ window.addEventListener('DOMContentLoaded', function () {
     render() {
       const element = document.createElement('div');
       if (this.classes.length === 0) {
-        this.element = '.menu__item';
+        this.element = 'menu__item';
         element.classList.add(this.element);
       } else {
         this.classes.forEach((className) => element.classList.add(className));
@@ -170,49 +170,111 @@ window.addEventListener('DOMContentLoaded', function () {
       <div class="menu__item-divider"></div>
       <div class="menu__item-price">
         <div class="menu__item-cost">Цена:</div>
-        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+        <div class="menu__item-total"><span>${this.price}</span> р/день</div>
       </div>  
       `;
       this.parent.append(element);
     }
   }
 
-  new MenuCard(
-    'img/tabs/vegy.jpg',
-    'vegy',
-    'Меню "Фитнес"',
-    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-    9,
-    '.menu .container',
-    'menu__item'
-  ).render();
+  const getResource = async (url) => {
+    const res = await fetch(url);
 
-  new MenuCard(
-    'img/tabs/elite.jpg',
-    'elite',
-    'Меню “Премиум”',
-    `В меню “Премиум” мы используем 
-    не только красивый дизайн 
-    упаковки, но и качественное исполнение
-    блюд. Красная рыба, 
-    морепродукты, фрукты - 
-    ресторанное меню без похода в 
-    ресторан!`,
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url} with status ${res.status}`);
+    }
 
-    20,
-    '.menu .container',
-    'menu__item'
-  ).render();
+    return await res.json();
+  };
 
-  new MenuCard(
-    'img/tabs/post.jpg',
-    'post',
-    'Меню "Постное"',
-    `Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.`,
-    16,
-    '.menu .container',
-    'menu__item'
-  ).render();
+  // getResource('http://localhost:3000/menu').then((data) => createCard(data));
+
+  // function createCard(data) {
+  //   data.forEach(({ img, altimg, title, descr, price }) => {
+  //     const element = document.createElement('div');
+  //     const currentPrice = price * 2.56;
+
+  //     element.classList.add('menu__item');
+
+  //     element.innerHTML = `
+  //     <img src=${img} alt=${altimg} />
+  //     <h3 class="menu__item-subtitle">${title}</h3>
+  //     <div class="menu__item-descr">
+  //       ${descr}
+  //     </div>
+  //     <div class="menu__item-divider"></div>
+  //     <div class="menu__item-price">
+  //       <div class="menu__item-cost">Цена:</div>
+  //       <div class="menu__item-total"><span>${currentPrice}</span> р/день</div>
+  //     </div>
+  //     `;
+
+  //     document.querySelector('.menu .container').append(element);
+  //   });
+  // }
+
+  // getResource('http://localhost:3000/menu').then((data) => {
+  //   data.forEach(({ img, altimg, title, descr, price }) => {
+  //     new MenuCard(
+  //       img,
+  //       altimg,
+  //       title,
+  //       descr,
+  //       price,
+  //       '.menu .container'
+  //     ).render();
+  //   });
+  // });
+
+  axios.get('http://localhost:3000/menu').then((data) => {
+    data.data.forEach(({ img, altimg, title, descr, price }) => {
+      new MenuCard(
+        img,
+        altimg,
+        title,
+        descr,
+        price,
+        '.menu .container'
+      ).render();
+    });
+  });
+
+  // new MenuCard(
+  //   'img/tabs/vegy.jpg',
+  //   'vegy',
+  //   'Меню "Фитнес"',
+  //   'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+  //   9,
+  //   '.menu .container',
+  //   'menu__item'
+  // ).render();
+
+  // new MenuCard(
+  //   'img/tabs/elite.jpg',
+  //   'elite',
+  //   'Меню “Премиум”',
+  //   `В меню “Премиум” мы используем
+  //   не только красивый дизайн
+  //   упаковки, но и качественное исполнение
+  //   блюд. Красная рыба,
+  //   морепродукты, фрукты -
+  //   ресторанное меню без похода в
+  //   ресторан!`,
+
+  //   20,
+  //   '.menu .container',
+  //   'menu__item'
+  // ).render();
+
+  // new MenuCard(
+  //   'img/tabs/post.jpg',
+  //   'post',
+  //   'Меню "Постное"',
+  //   `Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.`,
+  //   16,
+  //   '.menu .container',
+  //   'menu__item'
+  // ).render();
 
   //Forms
 
@@ -225,10 +287,22 @@ window.addEventListener('DOMContentLoaded', function () {
   };
 
   formElements.forEach((item) => {
-    postData(item);
+    bindPostData(item);
   });
 
-  function postData(form) {
+  const postData = async (url, data) => {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: data,
+    });
+
+    return await res.json();
+  };
+
+  function bindPostData(form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -243,19 +317,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
       const formData = new FormData(form);
 
-      const object = {};
-      formData.forEach(function (key, value) {
-        object[key] = value;
-      });
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-      fetch('server.php', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify(object),
-      })
-        .then((data) => data.text())
+      postData('http://localhost:3000/requests', json)
         .then((data) => {
           console.log(data);
           showThanksModal(message.success);
@@ -303,4 +367,171 @@ window.addEventListener('DOMContentLoaded', function () {
       closeModalHandler();
     }, 4000);
   }
+
+  //Slider-1
+  const slidesElements = document.querySelectorAll('.offer__slide');
+  const sliderElement = document.querySelector('.offer__slider');
+  const prevArrowEl = document.querySelector('.offer__slider-prev');
+  const nextArrowEl = document.querySelector('.offer__slider-next');
+  const totalSlides = document.querySelector('#total');
+  const currentSlide = document.querySelector('#current');
+  const slidesWrapperEl = document.querySelector('.offer__slider-wrapper');
+  const slidesInnerEl = document.querySelector('.offer__slider-inner');
+  const width = window.getComputedStyle(slidesWrapperEl).width;
+
+  let slideIndex = 1;
+  let offset = 0;
+
+  if (slidesElements.length < 10) {
+    totalSlides.textContent = `0${slidesElements.length}`;
+    currentSlide.textContent = `0${slideIndex}`;
+  } else {
+    totalSlides.textContent = slidesElements.length;
+    currentSlide.textContent = slideIndex;
+  }
+
+  slidesInnerEl.style.width = 100 * slidesElements.length + '%';
+  slidesInnerEl.style.display = 'flex';
+  slidesInnerEl.style.transition = '0.5s all';
+
+  slidesWrapperEl.style.overflow = 'hidden';
+
+  slidesElements.forEach((slide) => {
+    slide.style.width = width;
+  });
+
+  sliderElement.style.position = 'relative';
+
+  const indicators = document.createElement('ol');
+  const dots = [];
+  indicators.classList.add('carousel-indicators');
+  sliderElement.append(indicators);
+
+  for (let i = 0; i < slidesElements.length; i++) {
+    const dot = document.createElement('li');
+    dot.setAttribute('data-slide-to', i + 1);
+    dot.classList.add('dot');
+
+    if (i == 0) {
+      dot.style.opacity = 1;
+    }
+    indicators.append(dot);
+    dots.push(dot);
+  }
+
+  nextArrowEl.addEventListener('click', () => {
+    if (
+      offset ==
+      +width.slice(0, width.length - 2) * (slidesElements.length - 1)
+    ) {
+      offset = 0;
+    } else {
+      offset += +width.slice(0, width.length - 2);
+    }
+    slidesInnerEl.style.transform = `translateX(-${offset}px)`;
+    if (slideIndex == slidesElements.length) {
+      slideIndex = 1;
+    } else {
+      slideIndex++;
+    }
+
+    if (slideIndex < 10) {
+      currentSlide.textContent = `0${slideIndex}`;
+    } else {
+      currentSlide.textContent = slideIndex;
+    }
+
+    dots.forEach((dot) => {
+      dot.style.opacity = '.5';
+    });
+    dots[slideIndex - 1].style.opacity = 1;
+  });
+
+  prevArrowEl.addEventListener('click', () => {
+    if (offset == 0) {
+      offset = +width.slice(0, width.length - 2) * (slidesElements.length - 1);
+    } else {
+      offset -= +width.slice(0, width.length - 2);
+    }
+    slidesInnerEl.style.transform = `translateX(-${offset}px)`;
+
+    if (slideIndex == 1) {
+      slideIndex = slidesElements.length;
+    } else {
+      slideIndex--;
+    }
+
+    if (slideIndex < 10) {
+      currentSlide.textContent = `0${slideIndex}`;
+    } else {
+      currentSlide.textContent = slideIndex;
+    }
+    dots.forEach((dot) => {
+      dot.style.opacity = '.5';
+    });
+    dots[slideIndex - 1].style.opacity = 1;
+  });
+
+  dots.forEach((dot) =>
+    dot.addEventListener('click', (e) => {
+      const slideTo = e.target.getAttribute('data-slide-to');
+
+      slideIndex = slideTo;
+      offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+      slidesInnerEl.style.transform = `translateX(-${offset}px)`;
+
+      dots.forEach((dot) => {
+        dot.style.opacity = '.5';
+      });
+      dots[slideIndex - 1].style.opacity = 1;
+      if (slideIndex < 10) {
+        currentSlide.textContent = `0${slideIndex}`;
+      } else {
+        currentSlide.textContent = slideIndex;
+      }
+    })
+  );
+
+  // showSlides(slideIndex);
+
+  // if (slidesElements.length < 10) {
+  //   totalSlides.textContent = `0${slidesElements.length}`;
+  // } else {
+  //   totalSlides.textContent = slidesElements.length;
+  // }
+
+  // function showSlides(n) {
+  //   if (n > slidesElements.length) {
+  //     slideIndex = 1;
+  //   }
+
+  //   if (n < 1) {
+  //     slideIndex = slidesElements.length;
+  //   }
+
+  //   slidesElements.forEach((slide) => {
+  //     slide.classList.add('hide');
+  //   });
+
+  //   slidesElements[slideIndex - 1].classList.remove('hide');
+  //   slidesElements[slideIndex - 1].classList.add('show');
+
+  //   if (slidesElements.length < 10) {
+  //     currentSlide.textContent = `0${slideIndex}`;
+  //   } else {
+  //     currentSlide.textContent = slideIndex;
+  //   }
+  // }
+
+  // function plusSlides(n) {
+  //   showSlides((slideIndex += n));
+  // }
+
+  // prevArrowEl.addEventListener('click', () => {
+  //   plusSlides(-1);
+  // });
+
+  // nextArrowEl.addEventListener('click', () => {
+  //   plusSlides(1);
+  // });
 });
