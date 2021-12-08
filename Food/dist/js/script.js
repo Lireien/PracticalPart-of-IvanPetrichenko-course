@@ -533,11 +533,40 @@ window.addEventListener('DOMContentLoaded', function () {
   //Calculator
 
   const resultElement = document.querySelector('.calculating__result span');
-  let gender = ' female',
-    height,
-    weight,
-    age,
-    ratio = '1.375';
+  let gender, height, weight, age, ratio;
+
+  if (localStorage.getItem('gender')) {
+    gender = localStorage.getItem('gender');
+  } else {
+    gender = ' female';
+    localStorage.setItem('gender', 'female');
+  }
+
+  if (localStorage.getItem('ratio')) {
+    ratio = localStorage.getItem('ratio');
+  } else {
+    ratio = 1.375;
+    localStorage.setItem('ratio', 1.375);
+  }
+
+  function initLocalSettings(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+
+    elements.forEach((elem) => {
+      elem.classList.remove(activeClass);
+      if (elem.getAttribute('id') === localStorage.getItem('gender')) {
+        elem.classList.add(activeClass);
+      }
+      if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+        elem.classList.add(activeClass);
+      }
+    });
+  }
+  initLocalSettings('#gender div', 'calculating__choose-item_active');
+  initLocalSettings(
+    '.calculating__choose_big div',
+    'calculating__choose-item_active'
+  );
 
   function calcCalories() {
     if (!gender || !height || !weight || !age || !ratio) {
@@ -558,15 +587,17 @@ window.addEventListener('DOMContentLoaded', function () {
 
   calcCalories();
 
-  function getStaticInformation(parentSelector, activeClass) {
-    const elements = document.querySelectorAll(`${parentSelector} div`);
+  function getStaticInformation(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
 
     elements.forEach((elem) => {
       elem.addEventListener('click', (e) => {
         if (e.target.getAttribute('data-ratio')) {
           ratio = +e.target.getAttribute('data-ratio');
+          localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
         } else {
           gender = e.target.getAttribute('id');
+          localStorage.setItem('gender', e.target.getAttribute('id'));
         }
 
         elements.forEach((elem) => {
@@ -580,9 +611,9 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  getStaticInformation('#gender', 'calculating__choose-item_active');
+  getStaticInformation('#gender div', 'calculating__choose-item_active');
   getStaticInformation(
-    '.calculating__choose_big',
+    '.calculating__choose_big div',
     'calculating__choose-item_active'
   );
 
