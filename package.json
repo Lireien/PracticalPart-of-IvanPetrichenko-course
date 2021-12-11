@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/Lireien/js-course#readme",
   "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
     "json-server": "^0.17.0"
   }
 }
